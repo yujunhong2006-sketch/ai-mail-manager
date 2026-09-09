@@ -1,3 +1,6 @@
+import { drizzle as localDrizzle } from "drizzle-orm/pglite";
+import { migrate as localMigrate } from "drizzle-orm/pglite/migrator";
+import { getLocalDatabase } from "./client";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
@@ -9,6 +12,10 @@ export async function runMigrations(migrationsFolder?: string) {
   const { DATABASE_URL } = getEnv();
   const here = dirname(fileURLToPath(import.meta.url));
   const folder = migrationsFolder ?? resolve(here, "../../drizzle");
+  if (process.env.DATABASE_DRIVER === "local") {
+    await localMigrate(localDrizzle(getLocalDatabase()), { migrationsFolder: folder });
+    return;
+  }
   const sql = postgres(DATABASE_URL, { max: 1 });
   const db = drizzle(sql);
   await migrate(db, { migrationsFolder: folder });

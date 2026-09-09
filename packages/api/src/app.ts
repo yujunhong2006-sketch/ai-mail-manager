@@ -1,3 +1,4 @@
+import { localSetupRoutes } from "./routes/localSetup";
 import { mailManagerRoutes } from "./routes/mailManager";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -36,6 +37,7 @@ export function createApp(opts: { webOrigin?: string } = {}) {
   app.use("*", requestLog());
 
   app.get("/health", (c) => c.json({ ok: true }));
+  app.get("/local-health", (c) => process.env.DATABASE_DRIVER === "local" ? c.json({ ok: true, app: "ai-mail-manager-api" }) : c.json({ error: "not_found" }, 404));
 
   // Public OAuth callback: Google redirects the browser here with no bearer
   // token, so it must be mounted before the bearer middleware.
@@ -43,6 +45,7 @@ export function createApp(opts: { webOrigin?: string } = {}) {
 
   app.use("*", bearerAuth());
 
+  app.route("/local-setup", localSetupRoutes);
   app.route("/manager", mailManagerRoutes);
   app.route("/accounts", accountsRoutes);
   app.route("/auth", authRoutes);

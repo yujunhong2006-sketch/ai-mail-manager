@@ -157,7 +157,7 @@ export const App = () => {
   return (
     <TriageActivityProvider>
       {/* Mounted on the layout, so the gate covers every route below it. */}
-      <OnboardingGate error={gateError} onRetry={clearGateError} />
+      {!(import.meta.env.VITE_LOCAL_WORKBENCH === "true" && (pathname === "/" || pathname === "/manager")) && <OnboardingGate error={gateError} onRetry={clearGateError} />}
       <AppShell>
         <Sidebar
           selectedAccountId={selectedAccountId}

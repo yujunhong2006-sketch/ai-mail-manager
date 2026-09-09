@@ -1,3 +1,21 @@
+# 一键本机工作台（无需 Docker / WSL）
+
+当前这台电脑可以直接使用已提供的「启动邮件工作台.cmd」和「停止邮件工作台.cmd」。首次启动会准备网页，之后在浏览器打开 http://localhost:5230/app/manager 。
+
+源码中的通用入口是 scripts/local/start.cmd，需要已有 Node.js 和 Bun。当前电脑的专用入口自动使用 Codex 配套的 Node 和本次已准备的 Bun，无需全局安装。依赖和本机私有 .env 已准备好。
+
+本机模式通过 DATABASE_DRIVER=local 启用 PGlite，数据持久化到 local-data/mail-db；它与 Docker/PostgreSQL 数据库分别存储，不会自动迁移之前的数据库。原有多 Gmail、分类、摘要、动作和草稿逻辑保持不变。
+
+进入页面点击「连接 Gmail / 首次设置」，在网页中填写 Google OAuth 客户端并连接账号；不再需要手动修改 Google 配置文件。AI 提供商凭据仍在应用设置中填写。尚未授权账号时，不会显示真实邮件。
+
+服务仅监听本机 127.0.0.1，不自动随 Windows 启动。关闭浏览器不等于停止后台；使用停止入口可释放后台资源。首次运行与最终页面渲染尚未在自动执行环境中验证：当前会话的权限策略阻止了启动及其网页构建。核心、API 与本机网页服务的类型检查已通过。
+
+备份时保留 .env 和 local-data。不要将这些私有文件上传到仓库。生成的日志位于 local-data，可用于排查启动问题。
+
+---
+
+以下为可选 Docker 部署，当前这台电脑不需要继续安装 WSL 或 Docker。
+
 # 本地部署 AI Mail Manager
 
 推荐 Windows 用户通过 Docker Desktop 启动完整服务。需要 Git、Docker Compose，以及自己的 Google OAuth 客户端和一个 AI 提供商凭据。没有凭据也可以启动服务，但无法连接真实 Gmail 或运行 AI 分析。

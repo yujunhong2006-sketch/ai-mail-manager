@@ -80,7 +80,7 @@ export function MailManagerPage() {
       <header className="manager-header">
         <div>
           <p className="manager-eyebrow">YOUR MAIL, AT A GLANCE</p>
-          <h1>AI Mail Manager</h1>
+          <h1>邮件工作台</h1>
           <p>Focus on what needs you. Review everything else in a summary.</p>
         </div>
         <label>
@@ -95,6 +95,7 @@ export function MailManagerPage() {
           </select>
         </label>
       </header>
+      {import.meta.env.VITE_LOCAL_WORKBENCH === "true" && <p className="manager-note">本机运行 · <a href="/setup">连接 Gmail / 首次设置</a> · <a href="/app/settings">AI 设置</a></p>}
       <p className="manager-note">Local quarantine · Saved reply drafts · No automatic sending</p>
       <div className="manager-tabs" aria-label="Mail categories">
         {categories.map((c) => (

@@ -24,3 +24,6 @@ bun.lockb
 # screenshots that ship are `docs/miel-*.webp`, taken against the seeded demo
 # stack (see .claude/skills/demo-screenshots) and safe to publish.
 .tmp-screenshots/
+# Local workbench database and process metadata (private).
+local-data/
+.env.tmp

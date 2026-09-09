@@ -68,6 +68,7 @@ scheduler.start();
 
 const server = Bun.serve<SyncSocketData>({
   port: listenPort,
+  hostname: process.env.DATABASE_DRIVER === "local" ? "127.0.0.1" : undefined,
   fetch(req, self) {
     const url = new URL(req.url);
     if (url.pathname === "/sync/ws" || url.pathname === "/api/sync/ws") {
