@@ -43,7 +43,7 @@ export const App = () => {
   const { gateError, clearGateError } = useConnectResult();
   // Standalone routes (settings, logs) don't belong to an account and must not
   // be redirected into /account/:id by the default-account effect below.
-  const isAccountScope = pathname === "/" || pathname.startsWith("/account");
+  const isAccountScope = pathname.startsWith("/account");
   const [selectedAccountId, setSelectedAccountId] = useState<string | undefined>();
   const [selectedLabelId, setSelectedLabelId] = useState<string | undefined>();
   const { range, isCurrentPeriod, canGoNext, goPrev, goNext, goToday, setViewMode } =

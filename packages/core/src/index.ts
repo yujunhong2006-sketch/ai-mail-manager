@@ -406,3 +406,10 @@ export type {
   TriagePhaseOptions,
   TriagePhaseResult,
 } from "./services/sync";
+
+export {
+  listManagedMail,
+  analyzeManagedMail,
+  updateManagedMail,
+  draftManagedReply,
+} from "./services/mailManager";

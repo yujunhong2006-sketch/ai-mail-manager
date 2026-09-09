@@ -138,6 +138,11 @@ export interface SendReplyResult {
 
 export const sendReplyEffect = (args: SendReplyArgs): Effect.Effect<SendReplyResult, Error> =>
   Effect.gen(function* () {
+    if (process.env.ALLOW_EMAIL_SEND !== "true") {
+      return yield* Effect.fail(
+        new Error("Sending is disabled. Review and copy your reply draft into Gmail."),
+      );
+    }
     debug("sendReply", {
       gmailMessageId: args.gmailMessageId,
       subject: args.subject,

@@ -1,3 +1,20 @@
+# AI Mail Manager
+
+基于 [lucasriondel/miel](https://github.com/lucasriondel/miel) 的多 Gmail 邮件管理器，保留上游 MIT 许可证与原有账号连接、同步和设置。
+
+- **Important**：AI 摘要、分类理由、建议动作、已确认的截止日期，以及可完成/重新打开的 Action List。
+- **Normal**：按主题汇集每封邮件的 AI 摘要，显示来源账号。
+- **Junk / Quarantine**：应用内隔离，支持恢复为 Normal 或 Important；不会自动移动到 Gmail 垃圾箱或永久删除。
+- **Pending**：旧邮件或尚未分析的邮件可逐封 Analyze；新同步的邮件自动写入分析。
+- 多账号统一看板和账号筛选；人工纠正分类会在刷新分析后保留。
+- 回复草稿保存在应用数据库，可复制到 Gmail；默认关闭后端发送。
+
+**本地部署：[LOCAL_SETUP.md](LOCAL_SETUP.md)**。打开 `/app/manager`，或直接打开 `/app` 进入看板。当前看板最多显示所选账号的最近 500 封未删除邮件，超出会明确提示。Normal 汇总按主题组合现有 AI 摘要，不额外生成跨邮件的综合推断。分析以发件人、主题、snippet 和接收日期为依据；信息不全时摘要会说明，deadline 不推测。草稿目前保存于本应用，不是 Gmail Drafts 文件夹。
+
+以下为上游文档；涉及发送的旧说明须以本分支默认 `ALLOW_EMAIL_SEND=false` 为准。上游手动标签、归档和移入垃圾箱功能仍在原邮件详情中。
+
+---
+
 <p align="center">
   <img src="packages/web/public/miel.webp" alt="miel" width="140" />
 </p>

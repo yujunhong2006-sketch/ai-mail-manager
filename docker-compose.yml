@@ -26,6 +26,7 @@ services:
       DATABASE_URL: postgres://miel:${POSTGRES_PASSWORD:-miel}@postgres:5432/miel
       API_SECRET: ${API_SECRET:-change-me-to-a-random-string}
       API_PORT: 3001
+      ALLOW_EMAIL_SEND: ${ALLOW_EMAIL_SEND:-false}
       WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:5230}
       CLAUDE_BIN: ${CLAUDE_BIN:-claude}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
@@ -38,7 +39,7 @@ services:
       # container reads none of them from its environment, so a value set here
       # would be ignored rather than used.
     ports:
-      - "${API_PORT:-5531}:3001"
+      - "127.0.0.1:${API_PORT:-5531}:3001"
 
   web:
     build:
@@ -57,7 +58,7 @@ services:
       # nginx at request time (see packages/web/nginx.conf.template).
       API_UPSTREAM: api:3001
     ports:
-      - "${WEB_PORT:-5230}:80"
+      - "127.0.0.1:${WEB_PORT:-5230}:80"
 
 volumes:
   miel-pgdata:

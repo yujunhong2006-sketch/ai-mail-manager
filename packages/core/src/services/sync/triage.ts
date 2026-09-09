@@ -1,6 +1,7 @@
+import { normalizeMailAnalysis } from "../mailAnalysis";
 import { Effect, Ref } from "effect";
 import { getDb } from "../../db/client";
-import { suggestedLabels, triages, triageLabelSuggestions } from "../../db/schema";
+import { suggestedLabels, triages, triageLabelSuggestions, mailInsights } from "../../db/schema";
 import { type TriageInputItemT, type TriageOutputItemT, TriageInput } from "../../schemas/triage";
 import type { SyncServerEventT } from "../../schemas/syncEvents";
 import type { NormalizedMessage } from "./types";
@@ -21,6 +22,7 @@ export function buildTriageItems(
     from: r.fromEmail,
     subject: r.subject,
     snippet: r.snippet,
+    internalDate: r.internalDate.toISOString(),
     currentLabels: r.labelIds
       .map((id) => labelsByGmailId.get(id)?.name)
       .filter((n): n is string => Boolean(n)),
@@ -56,6 +58,21 @@ export const persistTriageResults = (args: {
             model: args.model,
           })
           .returning({ id: triages.id }),
+      );
+      // Older provider responses remain compatible, but never equate low priority with spam.
+      const analysis = normalizeMailAnalysis(item);
+      yield* Effect.promise(() =>
+        db
+          .insert(mailInsights)
+          .values({
+            accountId: args.accountId,
+            gmailMessageId: msg.gmailMessageId,
+            ...analysis,
+          })
+          .onConflictDoUpdate({
+            target: [mailInsights.accountId, mailInsights.gmailMessageId],
+            set: analysis,
+          }),
       );
       const triageId = inserted[0].id;
       persisted += 1;

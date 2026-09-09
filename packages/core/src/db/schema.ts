@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm";
 import {
   pgTable,
+  check,
   pgEnum,
   uuid,
   text,
@@ -156,6 +158,41 @@ export const triages = pgTable(
   },
   (t) => ({
     byMsg: index("triages_msg").on(t.accountId, t.gmailMessageId, t.createdAt),
+  }),
+);
+
+// Application-only quarantine and analysis; Gmail messages are never deleted here.
+export const mailInsights = pgTable(
+  "mail_insights",
+  {
+    accountId: uuid("account_id").notNull(),
+    gmailMessageId: text("gmail_message_id").notNull(),
+    category: text("category").notNull(),
+    categoryOverride: text("category_override"),
+    summary: text("summary").notNull(),
+    reasoning: text("reasoning").notNull(),
+    suggestedAction: text("suggested_action"),
+    deadline: text("deadline"),
+    topic: text("topic").notNull().default("Other"),
+    completed: boolean("completed").notNull().default(false),
+    draftSubject: text("draft_subject"),
+    draftBody: text("draft_body"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    categoryCheck: check(
+      "mail_insights_category_check",
+      sql`${t.category} IN ('Important', 'Normal', 'Junk')`,
+    ),
+    overrideCheck: check(
+      "mail_insights_category_override_check",
+      sql`${t.categoryOverride} IN ('Important', 'Normal', 'Junk')`,
+    ),
+    pk: primaryKey({ columns: [t.accountId, t.gmailMessageId] }),
+    message: foreignKey({
+      columns: [t.accountId, t.gmailMessageId],
+      foreignColumns: [messages.accountId, messages.gmailMessageId],
+    }).onDelete("cascade"),
   }),
 );
 

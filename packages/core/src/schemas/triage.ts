@@ -36,6 +36,15 @@ export const TriageOutputItem = z.object({
   priority: Priority,
   reasoning: z.string(),
   applyExistingLabels: z.array(z.string()),
+  category: z.enum(["Important", "Normal", "Junk"]).optional(),
+  summary: z.string().max(2000).optional(),
+  suggestedAction: z.string().max(2000).nullable().optional(),
+  deadline: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .nullable()
+    .optional(),
+  topic: z.string().max(80).optional(),
   suggestNewLabels: z.array(SuggestedNewLabel),
 });
 export type TriageOutputItemT = z.infer<typeof TriageOutputItem>;

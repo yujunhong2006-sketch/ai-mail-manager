@@ -4,6 +4,12 @@ import { SidebarFooter } from "@/components/ui/sidebar";
 
 export const SidebarFooterNav = () => (
   <SidebarFooter>
+    <SidebarNavLink
+      to="/manager"
+      icon={<ScrollText aria-hidden className="sidebar-glyph h-4 w-4" />}
+    >
+      AI Mail Manager
+    </SidebarNavLink>
     <SidebarNavLink to="/logs" icon={<ScrollText aria-hidden className="sidebar-glyph h-4 w-4" />}>
       Logs
     </SidebarNavLink>

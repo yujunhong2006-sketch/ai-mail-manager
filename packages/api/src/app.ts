@@ -1,3 +1,4 @@
+import { mailManagerRoutes } from "./routes/mailManager";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { bearerAuth } from "./middleware/auth";
@@ -42,6 +43,7 @@ export function createApp(opts: { webOrigin?: string } = {}) {
 
   app.use("*", bearerAuth());
 
+  app.route("/manager", mailManagerRoutes);
   app.route("/accounts", accountsRoutes);
   app.route("/auth", authRoutes);
   app.route("/auth", googleOAuthStartRoutes);

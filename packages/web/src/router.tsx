@@ -1,3 +1,4 @@
+import { MailManagerPage } from "./pages/MailManagerPage";
 import { createBrowserRouter } from "react-router-dom";
 import { appBasename } from "./lib/basePath";
 import { App } from "./App";
@@ -18,7 +19,8 @@ export const router = createBrowserRouter(
       path: "/",
       element: <App />,
       children: [
-        { index: true, element: <InboxPage /> },
+        { index: true, element: <MailManagerPage /> },
+        { path: "manager", element: <MailManagerPage /> },
         {
           path: "account/:accountId",
           element: <InboxPage />,
